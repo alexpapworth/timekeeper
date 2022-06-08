@@ -21,6 +21,8 @@ function resetTime() {
   this.innerHTML = "🎉"
 
   saveContent.call(parent);
+
+  reorderTimekeepers();
 }
 
 function decideNextTimekeeperColor() {
@@ -89,6 +91,11 @@ function formatTime(timestamp) {
   }
 
   return text
+}
+
+function reorderTimekeepers() {
+  clearAllTimekeepers();
+  loadTimekeepers();
 }
 
 function createTimekeeper(color, letter, text = "", time = 0) {
@@ -169,15 +176,42 @@ function removeTimekeeper() {
   decideNextTimekeeperColor();
 }
 
-function loadTimekeepers() {
-  let length = JSON.parse(localStorage.length);
+function getTimekeepers() {
+  let timekeepers = []
+
+  const length = JSON.parse(localStorage.length);
 
   for (var index = 0; index < length; index++) {
-    let name = localStorage.key(index);
-    let storage = JSON.parse(localStorage.getItem(name));
+    const name = localStorage.key(index);
+    const storage = JSON.parse(localStorage.getItem(name));
 
-    createTimekeeper(storage.color, name, storage.text, storage.time);
+    const timekeeper = {
+      name: name,
+      color: storage.color,
+      text: storage.text,
+      time: storage.time,
+    }
+
+    timekeepers.push(timekeeper)
   }
+
+  return timekeepers
+}
+
+function loadTimekeepers() {
+  let timekeepers = getTimekeepers()
+
+  timekeepers.sort((a, b) => {
+    return b.time - a.time
+  })
+
+  timekeepers.forEach((timekeeper) => {
+    createTimekeeper(timekeeper.color, timekeeper.name, timekeeper.text, timekeeper.time);
+  });
+}
+
+function clearAllTimekeepers() {
+  document.querySelector('#items').innerHTML = ""
 }
 
 let ready;
