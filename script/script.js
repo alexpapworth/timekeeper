@@ -98,7 +98,7 @@ function reorderTimekeepers() {
   loadTimekeepers();
 }
 
-function createTimekeeper(color, letter, text = "", time = 0) {
+function createTimekeeper(color, letter, text = "Click to change text", time = 0) {
   if (time == 0) {
     time = new Date().getTime()
   }
@@ -129,6 +129,7 @@ function createTimekeeper(color, letter, text = "", time = 0) {
   container.appendChild(timekeeperContainer);
   addTimekeeperEventListeners();
 
+  saveContent.call(input);
   decideNextTimekeeperColor();
 }
 
