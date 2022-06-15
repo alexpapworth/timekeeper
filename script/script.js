@@ -5,6 +5,10 @@ let container;
 let colors = ["red", "orange", "yellow", "limegreen", "green", "aqua", "blue", "purple"]
 let letters = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"]
 
+const DAY = 86400000
+const HOUR = 3600000
+const MINUTE = 60000
+
 function saveContent() {
   let name = this.dataset.name;
   let color = this.dataset.color;
@@ -40,10 +44,6 @@ function decideNextTimekeeperColor() {
 }
 
 function calculateDays(timestamp) {
-  let DAY = 86400000
-  let HOUR = 3600000
-  let MINUTE = 60000
-
   let days = 0
   let hours = 0
   let minutes = 0
@@ -177,6 +177,13 @@ function removeTimekeeper() {
   decideNextTimekeeperColor();
 }
 
+function setDefaultTimekeepers() {
+  const time = new Date().getTime()
+  createTimekeeper("yellow", "c", "Timekeeper", time - HOUR);
+  createTimekeeper("orange", "b", "Timekeeper", time - DAY);
+  createTimekeeper("red", "a", "Timekeeper", time - (DAY * 3));
+}
+
 function getTimekeepers() {
   let timekeepers = []
 
@@ -209,6 +216,10 @@ function loadTimekeepers() {
   timekeepers.forEach((timekeeper) => {
     createTimekeeper(timekeeper.color, timekeeper.name, timekeeper.text, timekeeper.time);
   });
+
+  if (timekeepers.length === 0) {
+    setDefaultTimekeepers()
+  }
 }
 
 function clearAllTimekeepers() {
